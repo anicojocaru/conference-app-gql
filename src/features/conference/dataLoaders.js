@@ -2,20 +2,7 @@ const DataLoader=require('dataloader')
 
 const getConferencesLoaders= dbInstance => {
     return{
-            conferenceTypeById : new DataLoader(ids => 
-                dbInstance
-                .select('Id', 'Name', 'Code')
-                .from('DictionaryConferenceType')
-                .whereIn('Id',ids)
-                .then(rows => ids.map( id =>rows.find(x => x.id ===id)))
-            ),
-            categoryById: new DataLoader(ids => 
-                dbInstance
-                .select('Id', 'Name', 'Code')
-                .from('DictionaryConferenceType')
-                .whereIn('Id',ids)
-                .then(rows => ids.map(id =>rows.find(x => x.id ===id)))
-            ),
+           
             locationById: new DataLoader(ids => 
                 dbInstance
                 .select('Id','Name', 'Address', 'Latitude','CityId','CountyId', 'CountryId')
@@ -29,7 +16,7 @@ const getConferencesLoaders= dbInstance => {
                 .from('ConferenceXSpeaker AS c')
                 .innerJoin("Speaker AS s","c.SpeakerId","=","s.Id")
                 .whereIn('c.COnferenceId',ids)
-                .then(rows => ids.map(id =>rows.filter(x => x.id ===id)))
+                .then(rows => ids.map(id =>rows.filter(x => x.conferenceId ===id)))
 
             ),
             statusByConferenceId:new DataLoader(ids => 
@@ -42,24 +29,9 @@ const getConferencesLoaders= dbInstance => {
                 .then(rows => ids.map(i =>rows.find(x => x.conferenceId ===i.id && x.attendeeEmail ===i.userEmail)))
 
             ),
-            cityById: new DataLoader(ids => 
-                dbInstance.select("Id","Name","Code")
-                .from("DictionaryCity")
-                .whereIn('Id',ids)
-                .then(rows => ids.map(id=>rows.find(row => row.id ===id)))
-            ),
-            countyById: new DataLoader(ids => 
-                dbInstance.select("Id","Name","Code")
-                .from("DictionaryCounty")
-                .whereIn('Id',ids)
-                .then(rows => ids.map(id=>rows.find(row => row.id ===id)))
-            ),
-            countryById: new DataLoader(ids => 
-                dbInstance.select("Id","Name","Code")
-                .from("DictionaryCountry")
-                .whereIn('Id',ids)
-                .then(rows => ids.map(id=>rows.find(row => row.id ===id)))
-            )
+            
+           
+        
     }
 }
  module.exports= getConferencesLoaders
